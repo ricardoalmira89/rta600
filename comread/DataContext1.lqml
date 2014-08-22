@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database Name="optimus" EntityNamespace="OptimusContext" ContextNamespace="OptimusContext" Class="OptimusDataContext" xmlns:ed="http://devart.com/schemas/EntityDeveloper/1.0" ed:Guid="79137686-0a13-4533-aa27-c63b9691dfb1" Provider="Devart.Data.MySql.Linq.Provider.MySqlDataProvider, Devart.Data.MySql.Linq" Extended="true" xmlns="http://schemas.devart.com/linqconnect/mapping">
+  <Connection Mode="ConnectionString" ConnectionString="User Id=root;Host=localhost;Database=optimus;Persist Security Info=True" Provider="Devart.Data.MySql" />
+  <Table Name="optimus.optimus_marcaciones" Member="Optimus_Marcaciones">
+    <Type Name="Optimus_Marcaciones" ed:Guid="c54f2efd-1e09-4998-8ba4-2435acec094a">
+      <Column Name="id" Member="Id" Type="System.Int32" AutoSync="OnInsert" DbType="INT(11) NOT NULL AUTO_INCREMENT" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="11" ed:ValidateRequired="True" ed:Guid="22d88fe2-d981-40f5-8a87-45dbbd83c933" />
+      <Column Name="tarjeta" Member="Tarjeta" Type="System.String" DbType="VARCHAR(10) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="10" ed:ValidateMaxLength="10" ed:ValidateRequired="True" ed:Guid="44ca74d5-e9ef-40db-9a3c-650628ac4572" />
+      <Column Name="fecha" Member="Fecha" Type="System.DateTime" DbType="DATETIME NOT NULL" CanBeNull="false" UpdateCheck="Never" ed:ValidateRequired="True" ed:Guid="d75dca01-544f-42b0-bbfe-95d0e5fac387" />
+    </Type>
+  </Table>
+</Database>

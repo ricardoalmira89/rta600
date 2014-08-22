@@ -1,0 +1,12 @@
+E:\comread\comread\bin\Debug\comread.exe.config
+E:\comread\comread\obj\Debug\comread.exe
+E:\comread\comread\obj\Debug\comread.pdb
+E:\comread\comread\bin\Debug\comread.exe
+E:\comread\comread\bin\Debug\comread.pdb
+C:\Users\cyber\Desktop\comread\comread\bin\Debug\comread.exe.config
+C:\Users\cyber\Desktop\comread\comread\bin\Debug\comread.exe
+C:\Users\cyber\Desktop\comread\comread\bin\Debug\comread.pdb
+C:\Users\cyber\Desktop\comread\comread\bin\Debug\RTA600.DLL
+C:\Users\cyber\Desktop\comread\comread\obj\Debug\comread.exe
+C:\Users\cyber\Desktop\comread\comread\obj\Debug\comread.pdb
+C:\Users\cyber\Desktop\comread\comread\bin\Debug\Devart.Data.dll
