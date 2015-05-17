@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
+using Extensions;
 
 namespace RTA600_Device
 {
+
     /// <summary>
     /// Encapsula una Marcacion
     /// </summary>
@@ -21,8 +23,7 @@ namespace RTA600_Device
     public class RTA600
     {
         private SerialPort _serialPort = new SerialPort();
-        private int _buff_height = 32000;
-
+        private int _buff_height = 4096;
         /// <summary>
         /// Crea una interface para el dispositivo RTA600
         /// </summary>
@@ -61,7 +62,7 @@ namespace RTA600_Device
 
             for (int i = 0; i < text.Length; i += 2)
             {
-                buff[buff_index] = Convert.ToByte(text[i + 1].ToString() + text[i].ToString(), 16);
+                buff[buff_index] = Convert.ToByte(text[i].ToString() + text[i+1].ToString(), 16);
                 buff_index++;
             }
 
@@ -72,27 +73,27 @@ namespace RTA600_Device
         /// Lee el puerto serie y devuelve un arreglo de bytes con la lectura recibida
         /// </summary>
         /// <returns></returns>
-        private byte[] ReadSerial()
+        public byte[] ReadSerial()
         {
-            byte[] buffer_receive = new byte[_buff_height];
+            List<byte> l = new List<byte>();
 
             try
             {
                 for (int i = 0; i < _buff_height; i++)
-                    buffer_receive[i] = (byte)_serialPort.ReadByte();
+                    l.Add((byte)_serialPort.ReadByte());
             }
             catch (Exception)
             {
             }
 
-            return buffer_receive;
+            return l.ToArray();
         }
 
         /// <summary>
         /// Escribe en el puerto serie
         /// </summary>
         /// <param name="data">los datos a escribir ej: E7E7102090E7 enviará el equivalente de cada {E7,E7,10,20,90,E7} convertido a bytes </param>
-        private void WriteSerial(string data)
+        public void WriteSerial(string data)
         {
             byte[] buffer_send = StringToByteArr(data);
             _serialPort.Write(buffer_send, 0, buffer_send.Count());
@@ -113,7 +114,7 @@ namespace RTA600_Device
         /// </summary>
         /// <param name="buffer">buffer recibido desde el puerto serial</param>
         /// <returns></returns>
-        private List<string> BytesToMarcation(byte[] buffer)
+        private List<string> BytesToMarcation(List<byte> buffer)
         {
             List<string> marcations = new List<string>();
 
@@ -161,20 +162,36 @@ namespace RTA600_Device
         /// <param name="nodo">El valor del nodo va desde 1 hasta 9</param>
         /// <param name="limpiar">true para borrar los datos del dispositivo despues de leerlos</param>
         /// <returns>Un lista con las marcaciones leidas.</returns>
-        public List<Marcacion> LeerMarcaciones(byte nodo, bool limpiar = true)
+        public List<Marcacion> LeerMarcaciones(byte nodo)
         {
             List<Marcacion> Temp_Marcaciones = new List<Marcacion>();
 
             if (nodo <= 9)
             {
-                byte[] buffer = new byte[_buff_height];
+                byte[] buffer;
+                List<byte> buffer_total = new List<byte>();
                 List<string> marcation_strings = new List<string>();
-                string node_hex_value = (nodo * 10).ToString();
 
                 Console.Write("Leyendo nodo #{0}:\t", nodo);
-                WriteSerial(string.Format("E7E710{0}90E7", node_hex_value));
+
+                WriteSerial(string.Format("7E7E010{0}097E", nodo));
                 buffer = ReadSerial();
-                marcation_strings.AddRange(BytesToMarcation(buffer));
+                buffer_total.AddRange(buffer);
+
+                bool stop = false;
+
+                while (!stop)
+                {
+                    WriteSerial(string.Format("7E7E010{0}067E7E7E010{0}097E", nodo));
+
+                    buffer = ReadSerial();
+                    buffer_total.AddRange(buffer);
+                    if (buffer.HexStr() == string.Format("7E7E010{0}06097E", nodo)) stop = true;
+                    
+                        
+                }
+
+                marcation_strings.AddRange(BytesToMarcation(buffer_total));
                 Console.WriteLine("{0} marcaciones.", marcation_strings.Count);
 
                 foreach (string marcacion in marcation_strings)
@@ -182,8 +199,6 @@ namespace RTA600_Device
                     Console.WriteLine(marcacion);
                     Temp_Marcaciones.Add(CreateMarcation(marcacion));
                 }
-
-                if (limpiar) LimpiaNodo(nodo);
             }
             else
                 Console.WriteLine("Nodo fuera de rango. Debe ser entre 1 y 9");
@@ -191,6 +206,42 @@ namespace RTA600_Device
 
 
             return Temp_Marcaciones;
+        }
+
+        
+        
+
+    }
+}
+
+namespace Extensions
+{
+    public static class ByteArrayExtension
+    {
+        static readonly char[] hexchar = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+        
+        /// <summary>
+        /// Devuelve un string que concatena todos los valores del arreglo de bytes convertidos a hexadecimal.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="space"></param>
+        /// <returns></returns>
+        public static string HexStr(this byte[] data, bool space = false)
+        {
+            int len = data.Length;
+            int offset = 0;
+            int i = 0, k = 2;
+            if (space) k++;
+            var c = new char[len * k];
+            while (i < len)
+            {
+                byte d = data[offset + i];
+                c[i * k] = hexchar[d / 0x10];
+                c[i * k + 1] = hexchar[d % 0x10];
+                if (space && i < len - 1) c[i * k + 2] = ' ';
+                i++;
+            }
+            return new string(c, 0, c.Length);
         }
     }
 }

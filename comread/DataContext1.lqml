@@ -1,11 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Database Name="optimus" EntityNamespace="OptimusContext" ContextNamespace="OptimusContext" Class="OptimusDataContext" xmlns:ed="http://devart.com/schemas/EntityDeveloper/1.0" ed:Guid="79137686-0a13-4533-aa27-c63b9691dfb1" Provider="Devart.Data.MySql.Linq.Provider.MySqlDataProvider, Devart.Data.MySql.Linq" Extended="true" xmlns="http://schemas.devart.com/linqconnect/mapping">
-  <Connection Mode="ConnectionString" ConnectionString="User Id=root;Host=localhost;Database=optimus;Persist Security Info=True" Provider="Devart.Data.MySql" />
-  <Table Name="optimus.optimus_marcaciones" Member="Optimus_Marcaciones">
-    <Type Name="Optimus_Marcaciones" ed:Guid="c54f2efd-1e09-4998-8ba4-2435acec094a">
-      <Column Name="id" Member="Id" Type="System.Int32" AutoSync="OnInsert" DbType="INT(11) NOT NULL AUTO_INCREMENT" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="11" ed:ValidateRequired="True" ed:Guid="22d88fe2-d981-40f5-8a87-45dbbd83c933" />
-      <Column Name="tarjeta" Member="Tarjeta" Type="System.String" DbType="VARCHAR(10) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="10" ed:ValidateMaxLength="10" ed:ValidateRequired="True" ed:Guid="44ca74d5-e9ef-40db-9a3c-650628ac4572" />
-      <Column Name="fecha" Member="Fecha" Type="System.DateTime" DbType="DATETIME NOT NULL" CanBeNull="false" UpdateCheck="Never" ed:ValidateRequired="True" ed:Guid="d75dca01-544f-42b0-bbfe-95d0e5fac387" />
+<Database Name="shirka_v2" EntityNamespace="OptimusContext" ContextNamespace="OptimusContext" Class="OptimusDataContext" xmlns:ed="http://devart.com/schemas/EntityDeveloper/1.0" ed:Guid="79137686-0a13-4533-aa27-c63b9691dfb1" Provider="Devart.Data.MySql.Linq.Provider.MySqlDataProvider, Devart.Data.MySql.Linq" Extended="true" xmlns="http://schemas.devart.com/linqconnect/mapping">
+  <Connection Mode="ConnectionString" ConnectionString="User Id=root;Host=localhost;Database=shirka_v2;Persist Security Info=True" Provider="Devart.Data.MySql" />
+  <Table Name="shirka_v2.rh_mark" Member="RhMarks">
+    <Type Name="RhMark" ed:Guid="8d166a59-6acc-42e2-be8a-dff71053b952">
+      <Column Name="id" Member="Id" Type="System.Int32" AutoSync="OnInsert" DbType="INT(11) NOT NULL AUTO_INCREMENT" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="11" ed:ValidateRequired="True" ed:Guid="46c971c3-62b4-4ced-8794-18ed3e9143f7" />
+      <Column Name="card" Member="Card" Type="System.String" DbType="VARCHAR(10) NULL" CanBeNull="true" UpdateCheck="Never" MaxLength="10" Unicode="true" ed:ValidateMaxLength="10" ed:ValidateRequired="False" ed:Guid="9a24f983-6a6f-4ab7-9fdc-1b18bfae166a" />
+      <Column Name="`date`" Member="Date" Type="System.DateTime" DbType="DATETIME NOT NULL" CanBeNull="false" UpdateCheck="Never" ed:ValidateRequired="True" ed:Guid="ea2665d1-89a0-4afb-b0d4-0b25eba5dcdb" />
+      <Association Name="RhMark_RhIncidence" ed:AssociationGuid="d096c273-dfc4-422c-9e29-5f0b4687677e" Member="RhIncidences" ed:Guid="afb4e7fb-d1c6-4872-a568-175795ea65eb" ThisKey="Id" OtherKey="MarkId" Type="RhIncidence" />
+    </Type>
+  </Table>
+  <Table Name="shirka_v2.library_librarians" Member="LibraryLibrarians">
+    <Type Name="LibraryLibrarian" ed:Guid="14e2de68-80fe-44b2-890e-729831b0a73b">
+      <Column Name="id" Member="Id" Type="System.Int32" AutoSync="OnInsert" DbType="INT(11) NOT NULL AUTO_INCREMENT" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="11" ed:ValidateRequired="True" ed:Guid="e32db98b-d93f-4fb7-9bff-51b904f45459" />
+      <Column Name="office_id" Member="OfficeId" Type="System.Int32" DbType="INT(11) NULL" CanBeNull="true" UpdateCheck="Never" Precision="11" ed:ValidateRequired="False" ed:Guid="8a2010e8-96ed-4779-81b7-852479576861" />
+      <Column Name="username" Member="Username" Type="System.String" DbType="VARCHAR(255) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="255" Unicode="true" ed:ValidateMaxLength="255" ed:ValidateRequired="True" ed:Guid="acfaa448-3658-45bd-9125-8f795604009e" />
+      <Column Name="`password`" Member="Password" Type="System.String" DbType="VARCHAR(255) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="255" Unicode="true" ed:ValidateMaxLength="255" ed:ValidateRequired="True" ed:Guid="25cda49f-1c3b-48a6-bb36-0f1badec93cb" />
+      <Column Name="date_reg" Member="DateReg" Type="System.DateTime" DbType="DATETIME NULL" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="False" ed:Guid="cdaa5144-d70c-4306-b2a1-05e649726cc6" />
+      <Column Name="last_login" Member="LastLogin" Type="System.DateTime" DbType="DATETIME NULL" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="False" ed:Guid="ac44b9b3-ce87-4e30-b62a-88eeb19d9d7d" />
+      <Column Name="full_name" Member="FullName" Type="System.String" DbType="VARCHAR(255) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="255" Unicode="true" ed:ValidateMaxLength="255" ed:ValidateRequired="True" ed:Guid="49055c86-5221-46ff-8bba-5fd59fb9d73f" />
+      <Column Name="email" Member="Email" Type="System.String" DbType="VARCHAR(255) NULL" CanBeNull="true" UpdateCheck="Never" MaxLength="255" Unicode="true" ed:ValidateMaxLength="255" ed:ValidateRequired="False" ed:Guid="3cddcee1-8bd8-4dff-9679-306d9db0f520" />
+      <Column Name="sex" Member="Sex" Type="System.Int16" DbType="SMALLINT(6) NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="6" ed:ValidateRequired="True" ed:Guid="e4fdb43b-6926-495c-be6b-95a2b9d07db1" />
+      <Column Name="id_xabal" Member="IdXabal" Type="System.Int32" DbType="INT(11) NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="11" ed:ValidateRequired="True" ed:Guid="de0f565e-aa4f-4d64-aef2-d4c00990e4e9" />
+      <Column Name="identification" Member="Identification" Type="System.String" DbType="VARCHAR(25) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="25" Unicode="true" ed:ValidateMaxLength="25" ed:ValidateRequired="True" ed:Guid="b5930739-f16f-488a-b595-f1cc088f714f" />
+      <Column Name="phone" Member="Phone" Type="System.String" DbType="VARCHAR(255) NULL" CanBeNull="true" UpdateCheck="Never" MaxLength="255" Unicode="true" ed:ValidateMaxLength="255" ed:ValidateRequired="False" ed:Guid="038eabf1-91ce-462a-8aaf-0b8d114deace" />
+      <Column Name="address" Member="Address" Type="System.String" DbType="VARCHAR(255) NULL" CanBeNull="true" UpdateCheck="Never" MaxLength="255" Unicode="true" ed:ValidateMaxLength="255" ed:ValidateRequired="False" ed:Guid="5d6d609b-56ad-4342-a205-1711cef44c53" />
+      <Column Name="card" Member="Card" Type="System.String" DbType="VARCHAR(10) NULL" CanBeNull="true" UpdateCheck="Never" MaxLength="10" Unicode="true" ed:ValidateMaxLength="10" ed:ValidateRequired="False" ed:Guid="281e364a-1caf-45d5-b9cd-2343ac92ee9d" />
+      <Column Name="schedule_id" Member="ScheduleId" Type="System.Int32" DbType="INT(11) NULL" CanBeNull="true" UpdateCheck="Never" Precision="11" ed:ValidateRequired="False" ed:Guid="46b713e5-0687-4683-aab4-5e5d37ce48f5" />
+      <Association Name="RhSchedule_LibraryLibrarian" ed:AssociationGuid="b63e2202-a3ca-4a95-9532-28bf333c6442" Member="RhSchedule" ed:Guid="7754404f-f905-4797-93fc-6dba17a65a14" ThisKey="ScheduleId" OtherKey="Id" Type="RhSchedule" DeleteRule="RESTRICT" IsForeignKey="true" />
+      <Association Name="LibraryLibrarian_RhIncidence" ed:AssociationGuid="bfa949e4-3a6a-4552-a4fd-cf5d774319a2" Member="RhIncidences" ed:Guid="435ed888-0e19-4d80-aaf1-69d3da4084fc" ThisKey="Id" OtherKey="LibrarianId" Type="RhIncidence" />
+    </Type>
+  </Table>
+  <Table Name="shirka_v2.rh_schedule" Member="RhSchedules">
+    <Type Name="RhSchedule" ed:Guid="17b34463-d85b-4d18-a57c-6a074bb34512">
+      <Column Name="id" Member="Id" Type="System.Int32" AutoSync="OnInsert" DbType="INT(11) NOT NULL AUTO_INCREMENT" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="11" ed:ValidateRequired="True" ed:Guid="bad70da7-f447-4618-bf05-696a14c75104" />
+      <Column Name="name" Member="Name" Type="System.String" DbType="VARCHAR(255) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="255" Unicode="true" ed:ValidateMaxLength="255" ed:ValidateRequired="True" ed:Guid="ca289734-7857-452a-82fc-5bccf79492f3" />
+      <Column Name="slug" Member="Slug" Type="System.String" DbType="VARCHAR(3) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="3" Unicode="true" ed:ValidateMaxLength="3" ed:ValidateRequired="True" ed:Guid="d5d789b4-ab09-4f3f-9991-256062820227" />
+      <Column Name="`begin`" Member="Begin" Type="System.TimeSpan" DbType="TIME NOT NULL" CanBeNull="false" UpdateCheck="Never" ed:ValidateRequired="True" ed:Guid="664e73b9-bd07-4d12-bd68-23c45ea134be" />
+      <Column Name="end" Member="End" Type="System.TimeSpan" DbType="TIME NULL" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="False" ed:Guid="6a5feb4e-13bd-4b15-a111-2b4ac405d6de" />
+      <Association Name="RhSchedule_LibraryLibrarian" ed:AssociationGuid="b63e2202-a3ca-4a95-9532-28bf333c6442" Member="LibraryLibrarians" ed:Guid="456a0793-ba72-45b6-bd09-1bddf333b44b" ThisKey="Id" OtherKey="ScheduleId" Type="LibraryLibrarian" />
+    </Type>
+  </Table>
+  <Table Name="shirka_v2.rh_incidence" Member="RhIncidences">
+    <Type Name="RhIncidence" ed:Guid="10718556-2141-4c60-9d70-eb83068d8105">
+      <Column Name="id" Member="Id" Type="System.Int32" AutoSync="OnInsert" DbType="INT(11) NOT NULL AUTO_INCREMENT" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="11" ed:ValidateRequired="True" ed:Guid="75d436e7-0fbd-45f5-a6e2-474d2aef601f" />
+      <Column Name="incidence_kind_id" Member="IncidenceKindId" Type="System.Int32" DbType="INT(11) NULL" CanBeNull="true" UpdateCheck="Never" Precision="11" ed:ValidateRequired="False" ed:Guid="fb07d484-0775-4e1e-b692-a900a0a93ab1" />
+      <Column Name="incidence_state_id" Member="IncidenceStateId" Type="System.Int32" DbType="INT(11) NULL" CanBeNull="true" UpdateCheck="Never" Precision="11" ed:ValidateRequired="False" ed:Guid="e6bd81b5-b33f-432a-8f12-6a447b439795" />
+      <Column Name="hours" Member="Hours" Type="System.Double" DbType="DOUBLE NULL" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="False" ed:Guid="40e79cf1-2cc9-4c32-a008-201a40a2200f" />
+      <Column Name="mark_id" Member="MarkId" Type="System.Int32" DbType="INT(11) NULL" CanBeNull="true" UpdateCheck="Never" Precision="11" ed:ValidateRequired="False" ed:Guid="10e1aa4d-cb73-4dc4-87cb-b2af0659f081" />
+      <Column Name="librarian_id" Member="LibrarianId" Type="System.Int32" DbType="INT(11) NULL" CanBeNull="true" UpdateCheck="Never" Precision="11" ed:ValidateRequired="False" ed:Guid="df3e0461-b395-4c69-8861-30a50eb54b87" />
+      <Association Name="RhMark_RhIncidence" ed:AssociationGuid="d096c273-dfc4-422c-9e29-5f0b4687677e" Member="RhMark" ed:Guid="f516cc5f-e014-46aa-8d31-f31ceb76de14" ThisKey="MarkId" OtherKey="Id" Type="RhMark" DeleteRule="RESTRICT" IsForeignKey="true" />
+      <Association Name="LibraryLibrarian_RhIncidence" ed:AssociationGuid="bfa949e4-3a6a-4552-a4fd-cf5d774319a2" Member="LibraryLibrarian" ed:Guid="df88ead6-c1ee-4b91-b8f0-633589b7e6d1" ThisKey="LibrarianId" OtherKey="Id" Type="LibraryLibrarian" DeleteRule="RESTRICT" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

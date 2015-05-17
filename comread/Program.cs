@@ -10,32 +10,61 @@ namespace comread
         static void Main(string[] args)
         {
 
-                OptimusDataContext Context = new OptimusContext.OptimusDataContext();
-                List<Marcacion> Marcaciones = new List<Marcacion>();
+            OptimusDataContext Context = new OptimusDataContext();
+            List<Marcacion> Marcaciones = new List<Marcacion>();
 
-                RTA600 rta = new RTA600();
-                Marcaciones.AddRange(rta.LeerMarcaciones(1, false));
-                Marcaciones.AddRange(rta.LeerMarcaciones(2, false));
-                rta.CloseConnection();
+                //RTA600 rta = new RTA600();
+                //Marcaciones.AddRange(rta.LeerMarcaciones(2));
+                //rta.CloseConnection();
 
-                foreach (Marcacion marcacion in Marcaciones)
+            /*
+                Marcacion m;
+                m.Tarjeta = "2015000000";
+                m.Fecha = new DateTime(2015, 05, 15, 8, 10, 15);
+                Marcaciones.Add(m);
+                m.Tarjeta = "2015000000";
+                m.Fecha = new DateTime(2015, 05, 15, 4, 35, 45);
+                Marcaciones.Add(m);
+             * */
+
+            IncidencesManager im = new IncidencesManager(Context);
+
+            foreach (LibraryLibrarian item in Context.LibraryLibrarians) { 
+             // if (item.Username == "ricardoalmira89") 
+                try
                 {
-                    OptimusContext.Optimus_Marcaciones new_marcacion = new OptimusContext.Optimus_Marcaciones();
-                    new_marcacion.Tarjeta = marcacion.Tarjeta;
-                    new_marcacion.Fecha = marcacion.Fecha;
-
-                    Context.Optimus_Marcaciones.InsertOnSubmit(new_marcacion);
+                    im.generateIncidences(item);
                 }
+                catch (Exception ex)
+                {
 
-                Console.WriteLine("Lectura finalizada");
+                    Console.WriteLine(ex.Message);
+                }
+                 
+            }
+            
+            
 
-                Console.Write("Subiendo a la db...:");
-                Context.SubmitChanges();
-                Console.WriteLine("[COMPLETADO]");
-            Console.ReadLine();
+
+
+            /*foreach (Marcacion marcacion in Marcaciones)
+            {
+                RhMark new_marcacion = new OptimusContext.RhMark();
+                new_marcacion.Card = marcacion.Tarjeta;
+                new_marcacion.Date = marcacion.Fecha;
+
+                Context.RhMarks.InsertOnSubmit(new_marcacion);
+            }
+
+            Console.WriteLine("Lectura finalizada");
+
+            Console.Write("Subiendo a la db...:");
+            Context.SubmitChanges();
+            Console.WriteLine("[COMPLETADO]");
+            Console.ReadLine();*/
 
         }
 
-  
+
     }
 }
