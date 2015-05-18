@@ -28,21 +28,16 @@ namespace comread
              * */
 
             IncidencesManager im = new IncidencesManager(Context);
+            DateTime day = new DateTime(2015, 04, 02);
 
             foreach (LibraryLibrarian item in Context.LibraryLibrarians) { 
-             // if (item.Username == "ricardoalmira89") 
-                try
-                {
-                    im.generateIncidences(item);
-                }
-                catch (Exception ex)
-                {
+             //if (item.Username == "ricardoalmira89") 
+                    im.generateIncidences(item, day);
 
-                    Console.WriteLine(ex.Message);
-                }
                  
             }
-            
+
+            Context.SubmitChanges();
             
 
 

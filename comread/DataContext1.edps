@@ -4,10 +4,11 @@
     <Generation>
       <GeneratedFiles>
         <File Name="DataContext1.OptimusDataContext.cs" />
-        <File Name="DataContext1.RhMark.cs" />
         <File Name="DataContext1.LibraryLibrarian.cs" />
-        <File Name="DataContext1.RhSchedule.cs" />
         <File Name="DataContext1.RhIncidence.cs" />
+        <File Name="DataContext1.RhMark.cs" />
+        <File Name="DataContext1.RhSchedule.cs" />
+        <File Name="DataContext1.LibraryOffice.cs" />
       </GeneratedFiles>
     </Generation>
     <DatabaseFirstNamingRules>

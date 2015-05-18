@@ -1,0 +1,736 @@
+~fkt30x4l4;
+1. COMMAND LISTING & DESCRIPTION
+
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+  CMD     HEX    TYPE   DIRECT    DESCRIPTION
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+ GTCFG    01       I      ->      Get configure parameter
+ STCFG    02      B/I     ->      Set configure parameter
+ CLMSP    04      B/I     ->      Clear memory buffer and set packet no=0
+ ENQND    05       I      ->      Inquiry working node for link status
+ ACKGN    06       I     <->      Affirmative acknowledgements
+ STBEL    08      B/I     ->      On-line/Off-line speaker control
+ RSTND    09       I     <->      Request working node to transmit scanning datum
+ RSTNS    0A       I     <->      Request working node to transmit record of sensor
+ RSDNS    0B       I      ->      Request working mode to delete last sensor record
+ RSSCR    0C      B/I     ->      Restore the original screen
+ GTMOD    0D       I     <->      Get model number and date code
+ GTDAT    22       I     <->      Get RTC date
+ STDAT    23      B/I     ->      Set RTC date
+ GTTIM    24       I     <->      Get RTC time
+ STTIM    25      B/I     ->      Set RTC time
+ STROC    31      B/I     ->      On-line/Off-line relay output control
+ LDMES    62      B/I     ->      Display Message
+ LDNID    63      B/I     ->      Display working node ID
+ STBAT    72      B/I     ->      Set block time interval
+ GTOT     73       I     <->      Get password style
+ STOTC    74      B/I     ->      Set password style
+ STOPS    76      B/I     ->      Set User Card as single check mode
+ STTPS    78      B/I     ->      Set User Card as double check mode
+ GTALM    79       I     <->      Get sensor status (real time)
+ STOTD    7A      B/I     ->      Set door openning period
+ GTOTD    7B      B/I     ->      Get door opennig period
+ STOTD    7C      B/I     ->      Delete user password
+ DEBLP    7D      B/I     ->      Delete block password
+ STALM    80      B/I    <->      Set alarm active time
+ STTCE    82      B/I     ->      Set error alarm status
+ STALF    83      B/I     ->      Set alarm enable/disable flag
+ GTALF    84       I      ->      Get alarm enable/disable flag
+ STUSR    90      B/I     ->      Download user name
+ GTPBY    91       I      ->      Get 1 byte from Parameter Block
+ STPBY    92      B/I     ->      Write 1 byte to Parameter Block
+ GTPNI    93       I      ->      Get 1 nibble from Parameter Block
+ STPNI    94      B/I     ->      Write 1 nibble to Parameter Block
+ GTPBI    95       I      ->      Get 1 bit from Parameter Block
+ STPBI    96      B/I     ->      Write 1 bit to Parameter Block
+ STMMS    99      B/I     ->      Set Middle Level User Card as single check
+ STMMD    9A      B/I     ->      Set Middle Level User Card as double check
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+
+
+
+2. Configure Parameter :
+
+     BLOCK       BYTE (DEC)      PARAMETER
+    ¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+       0         23              Node ID
+       0         24              Error mark flag
+       0         25-88           Time Define table (4*16) [BCD Mode]
+       0         89-120          Block define (4*8) [Nibble]
+       0         121-128         Holiday Define (4*60) [BCD Mode]
+       1         1-112           Holiday Define [BCD Mode]
+       1         113-128         Holiday time table define [Nibble]
+       2         1-14            Holiday time table define [Nibble]
+       2         15              Card number filter
+       2         17              Input (sensor) active high/low flag
+       2         18              Relay type pluse/toggle flag
+       2         19-26           Pluse mode relay active time
+       2         27-46           Relay active condiction
+       2         47              Error counter
+       2         48              Beep counter
+       2         49              Stop counter
+       2         50              Keypad enable/disable flag
+       2         51              Force card enable/disable flag
+       2         52              Force code enable/disable flag
+       2         53-62           Force card
+       2         63-72           Force code
+       2         73              Memory Mode
+       2         75              Anti-passback mode flag
+       2         76              Anti-passback lock flag
+       2         83              Card duplex flag
+       2         84              Door relay define
+       2         85              Relay type latch/toggle
+       2         86              Door sensor detect time
+       2         89-98           Release code
+       2         99              Sensor output filter
+       2         101-112         Output format define
+       2         113-116         Alarm active time
+
+
+3. NEW COMMUNICATION COMMAND
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+GTCFG     01      B/I      Get configure parameter
+
+                 <FORMAT>  [->]     7EH,7EH,01H,05H,01H,Arg01,7EH
+                           [<-]     7EH,7EH,01H,05H,01H,Arg01,Arg02,Arg03,7EH
+
+                           Arg01( 1 byte)   : 0-3 (Parameter block number)
+                           Arg02(128 bytes) : 00-FFH (configure parameters)
+                           Arg03( 1 byte)   : 00-FFH (Checksum of Arg02)
+
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STCFG     02      B/I      Set configure parameter
+
+                 <FORMAT>  [->]     7EH,7EH,01H,05H,02H,Arg01,Arg02,Arg03,7EH
+                           [<-]     7EH,7EH,01H,06H,02H,7EH
+
+                           Arg01 (1 byte)   : 00-03H (Parameter block number)
+                           Arg02 (128 bytes) : 00-FFH (configure parameters)
+                           Arg03 (1 byte)   : 00-FFH (Checksum of Arg02)
+
+                 NOTE: If checksum error, the CL-90 will ignore setting parameter
+
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+RSTNS     0A      B/I      Request working node to transmit record of sensor
+
+                 <FORMAT>  [->]     7EH,7EH,01H,05H,0AH,7EH
+                           [<-]     7EH,7EH,01H,05H,01H,Arg01,Arg02,Arg03,Arg04
+                                    Arg05,Arg06,7EH
+
+                           Arg01 (7 bytes) : DATE & WEEK
+                           Arg02 (1 byte)  : 3AH(:)
+                           Arg03 (6 bytes) : TIME
+                           Arg04 (1 byte)  : 3AH(:)
+                           Arg05 (1 byte)  : Sensor Status
+                           Arg06 (1 byte)  : Chksum of Arg01 - Arg05
+
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+RSTNS     0B       I       Request working node to delete last sensor record
+
+                 <FORMAT>  [->]     7EH,7EH,01H,05H,0BH,7EH
+
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+
+
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STUSR     90      B/I      Download user name
+
+                 <FORMAT>  [->]     7EH,7EH,01H,05H,90H,Arg01,Arg02,Arg03,Arg04,¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+                                    Arg05,7EH
+                           [<-]     7EH,7EH,01H,06H,90H,7EH
+
+                           Arg01 : Card number
+                           Arg02 (1 byte)  : 3AH(:)
+                           Arg03 : Password
+                           Arg04 (1 byte)  : 3AH(:)
+                           Arg05 : User name
+                           Arg06 (1 byte)  : 23H(#)
+
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+GTPBY     91       I       Get 1 byte from Parameter Block
+
+                 <FORMAT>  [->]     7EH,7EH,01H,05H,91H,Arg01,Arg02,7EH
+                           [<-]     7EH,7EH,01H,05H,01H,Arg03,7EH
+
+                           Arg01 (1 byte) : Bank of Parameter Block
+                           Arg02 (1 byte) : Byte Point
+                           Arg03 (1 byte) : Data
+
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STPBY     92      B/I      Write 1 byte to Parameter Block
+
+                 <FORMAT>  [->]     7EH,7EH,01H,05H,92H,Arg01,Arg02,Arg03,7EH
+                           [<-]     7EH,7EH,01H,06H,92H,7EH
+
+                           Arg01 (1 byte) : Bank of Parameter Block
+                           Arg02 (1 byte) : Byte Point
+                           Arg03 (1 byte) : Data
+
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+GTPNI     93       I       Get 1 nibble from Parameter Block
+
+                 <FORMAT>  [->]     7EH,7EH,01H,05H,93H,Arg01,Arg02,Arg03,7EH
+                           [<-]     7EH,7EH,01H,05H,01H,Arg04,7EH
+
+                           Arg01 (1 byte) : Bank of Parameter Block
+                           Arg02 (1 byte) : Byte Point
+                           Arg03 (1 byte) : Nibble Point (0:Low, 1:High nibble)
+                           Arg04 (1 byte) : Data
+
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STPNI     94      B/I      Write 1 nibble to Parameter Block
+
+                 <FORMAT>  [->]     7EH,7EH,01H,05H,94H,Arg01,Arg02,Arg03,Arg04
+                                    ,7EH
+                           [<-]     7EH,7EH,01H,06H,94H,7EH
+
+                           Arg01 (1 byte) : Bank of Parameter Block
+                           Arg02 (1 byte) : Byte Point
+                           Arg03 (1 byte) : Nibble Point (0:Low, 1:High nibble)
+                           Arg04 (1 byte) : Data
+
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+GTPBI     95       I       Get 1 bit from Parameter Block
+
+                 <FORMAT>  [->]     7EH,7EH,01H,05H,95H,Arg01,Arg02,Arg03,7EH
+                           [<-]     7EH,7EH,01H,05H,01H,Arg04,7EH
+
+                           Arg01 (1 byte) : Bank of Parameter Block
+                           Arg02 (1 byte) : Byte Point
+                           Arg03 (1 byte) : Bit Point (0-7)
+                           Arg04 (1 byte) : Data
+
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STPBI     96      B/I      Write 1 bit to Parameter Block
+
+                 <FORMAT>  [->]     7EH,7EH,01H,05H,96H,Arg01,Arg02,Arg03,Arg04
+                                    ,7EH
+                           [<-]     7EH,7EH,01H,06H,96H,7EH
+
+                           Arg01 (1 byte) : Bank of Parameter Block
+                           Arg02 (1 byte) : Byte Point
+                           Arg03 (1 byte) : Bit Point (0-7)
+                           Arg04 (1 byte) : Data
+
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STMMS     99      B/I      Set Middle Level User Card as single check
+
+                 <FORMAT>  [->]     7EH,7EH,01H,05H,99H,Arg01,Arg02,7EH
+                           [<-]     7EH,7EH,01H,06H,99H,7EH
+
+                           Arg01 (1 byte)    : Block (0-7)
+                           Arg02 (1-13 byte) : Password
+
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STMMD     9A      B/I      Set Middle Level User Card as double check
+
+                 <FORMAT>  [->]     7EH,7EH,01H,05H,99H,Arg01,Arg02,Arg03,Arg04
+                                    ,7EH
+                           [<-]     7EH,7EH,01H,06H,9AH,7EH
+
+                           Arg01 (1 byte)   : Block (0-7)
+                           Arg02 (1-8 byte) : Slot Password
+                           Arg03 (1 byte)  : 3AH(:)
+                           Arg04 (1-5 byte) : Keypad Password
+
+¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+
+
+4. LIBRARY FOR CLIPPER
+
+             **********    RECO.LIB  FUNCTION  LISTING     **********
+
+¢w¢w¢w¢w¢s¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+FUNCTION¢x  Parameter Description
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+GTCFG01 ¢x Get configure parameter
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 1-255)
+        ¢x      3. Parameter Block No. (Value, 0-3)
+        ¢x
+        ¢x [Output]
+        ¢x      Parameter Block (String, Length=128)
+        ¢x
+        ¢x       * If return string equal SPACE(128) means communication error,
+        ¢x         Please retry GTCFG01 function.
+        ¢x
+        ¢x       * If return string not equal SPACE(128), return string is the
+        ¢x         Parameter Block which you want.
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STCFG02 ¢x Set configure parameter
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Parameter Block No. (Value, 0-3)
+        ¢x      4. Parameter Block (String, Length=128)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+CLMSP04 ¢x Clear memory buffer and set packet no=0
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢r¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+
+¢w¢w¢w¢w¢s¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+ENQND05 ¢x Inquiry working node for link status
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 1-255)
+        ¢x
+        ¢x [Output]
+        ¢x      Communication respondence (String, Varible length)
+        ¢x
+        ¢x       * If length of return string equal 7 means ONLINE, otherwise
+        ¢x         means communication error or OFFLINE.
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+ACKGN06 ¢x Affirmative acknowledgements
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 1-255)
+        ¢x
+        ¢x [Output]
+        ¢x      none
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STBEL08 ¢x On-line/Off-line speaker control
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Beep times (Value,0-9)
+        ¢x
+        ¢x [Output]
+        ¢x      none
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+RSTND09 ¢x Request working node to transmit scanning datum
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 1-255)
+        ¢x
+        ¢x [Output]
+        ¢x      Scanning datum (String, Varible length)
+        ¢x
+        ¢x       * If return string equal NULL means no data.
+        ¢x
+        ¢x       * If return string not equal NULL :
+        ¢x            First Byte : Node ID (ASC, "1"-"9")
+        ¢x            Byte 2 - Last byte : Datum
+        ¢x
+¢w¢w¢w¢w¢r¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+
+¢w¢w¢w¢w¢s¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+GTSTA0A ¢x Request working node to transmit record of sensor
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 1-255)
+        ¢x
+        ¢x [Output]
+        ¢x      Sensor Status (String, Length=15 or Length=16)
+        ¢x
+        ¢x       * If return string equal NULL means OFFLINE or communication
+        ¢x         error.
+        ¢x
+        ¢x       * If length of return string equal 15, means Status=0
+        ¢x
+        ¢x       * If length of return string equal 16, last byte is sensor
+        ¢x         status.
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+DESTA0B ¢x Request working mode to delete last sensor record
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 1-255)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+RSSCR0C ¢x Restore the original screen
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+GTMOD0D ¢x Get model number and date code
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 1-255)
+        ¢x
+        ¢x [Output]
+        ¢x      Model Number (String, Length=8)
+        ¢x
+        ¢x       * If return string equal NULL means OFFLINE or communication
+        ¢x         error.
+        ¢x
+¢w¢w¢w¢w¢r¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+
+¢w¢w¢w¢w¢s¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+GTDAT22 ¢x Get RTC date
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 1-255)
+        ¢x
+        ¢x [Output]
+        ¢x      Model Number (String, Length=7)
+        ¢x
+        ¢x       * If return string equal NULL means OFFLINE or communication
+        ¢x         error.
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STDAT23 ¢x Set RTC date
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Year     (Value, 0-99)
+        ¢x      4. Month    (Value, 1-12)
+        ¢x      5. Day      (Value, 1-31)
+        ¢x      6. Week     (Value, 1-7)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+GTTIM24 ¢x Get RTC time
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 1-255)
+        ¢x
+        ¢x [Output]
+        ¢x      Model Number (String, Length=6)
+        ¢x
+        ¢x       * If return string equal NULL means OFFLINE or communication
+        ¢x         error.
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STTIM25 ¢x Set RTC time
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Hour     (Value, 0-23)
+        ¢x      4. Minute   (Value, 0-59)
+        ¢x      5. Second   (Value, 0-59)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢r¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+
+¢w¢w¢w¢w¢s¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STROC31 ¢x On-line/Off-line relay output control
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Control Flag (Value, 0-1)
+        ¢x      4. Relay (Value, 0-7) [If Control Flag = 0]
+        ¢x         Relay (Character, "1") [If Control Flag = 1]
+        ¢x      5. Relay (Value, 0-7) [If Control Flag = 1]
+        ¢x      6. Relay on period1 (Value, 0-255) [If Control Flag = 1]
+        ¢x      7. Relay on period2 (Value, 0-255) [If Control Flag = 1]
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+LDMES62 ¢x Display Message
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Message  (String, Lengath= 1 - 31)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+LDNID63 ¢x Display working node ID
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STBAT72 ¢x Set block time interval
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Block    (Value, 0-7)
+        ¢x      4. Start Hour   (Value, 0-23)
+        ¢x      5. Start Minute (Value, 0-59)
+        ¢x      6. End Hour     (Value, 0-23)
+        ¢x      7. End Minute   (Value, 0-59)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢r¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+
+¢w¢w¢w¢w¢s¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+GTOTC73 ¢x Get password style
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 1-255)
+        ¢x
+        ¢x [Output]
+        ¢x      Check Level (Value, 0-1)
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STOTC74 ¢x Set password style
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Password Style (Value, 0-1)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STOPS76 ¢x Set User Card as single check mode
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Block (Value, 0-7)
+        ¢x      4. Password (String, Length= 1 to 13)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STTPS78 ¢x Set User Card as double check mode
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Block (Value, 0-7)
+        ¢x      4. Slot Password (String, Length= 1 to 8)
+        ¢x      5. Keypad Password (String, Length= 1 to 5)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢r¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+
+¢w¢w¢w¢w¢s¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+GTALM79 ¢x Get sensor status (real time)
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 1-255)
+        ¢x
+        ¢x [Output]
+        ¢x      Sensor Status (Value, 0-255)
+        ¢x
+        ¢x       * Bit 0 to 7 define as following :
+        ¢x
+        ¢x           ¢z¢w¢w¢w¢s¢w¢s¢w¢s¢w¢s¢w¢s¢w¢s¢w¢s¢w¢s¢w¢{
+        ¢x           ¢xBit   ¢x7 ¢x6 ¢x5 ¢x4 ¢x3 ¢x2 ¢x1 ¢x0 ¢x
+        ¢x           ¢u¢w¢w¢w¢q¢w¢q¢w¢q¢w¢q¢w¢q¢w¢q¢w¢q¢w¢q¢w¢t
+        ¢x           ¢xSensor¢x4 ¢x3 ¢x2 ¢x1 ¢x6 ¢xXX¢x0 ¢x5 ¢x
+        ¢x           ¢|¢w¢w¢w¢r¢w¢r¢w¢r¢w¢r¢w¢r¢w¢r¢w¢r¢w¢r¢w¢}
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STOTD7A ¢x Set door openning period
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Door opening period (Value, 1-255)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+DESIP7C ¢x Delete user password
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Block (Value, 0-7)
+        ¢x      4. Password (String, Length= 1 - 8)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+DEBLP7D ¢x Delete block password
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Block (Value, 0-7)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢r¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+
+¢w¢w¢w¢w¢s¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STALM80 ¢x Set alarm active time
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Start Hour   (Value, 0-23)
+        ¢x      4. Start Minute (Value, 0-59)
+        ¢x      5. End Hour     (Value, 0-23)
+        ¢x      6. End Minute   (Value, 0-59)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STTCE82 ¢x Set error alarm status
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Status   (Value, 0-1)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STALF83 ¢x Set alarm enable/disable flag
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Status   (Value, 0-1)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+GTALF84 ¢x Get alarm enable/disable flag
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 1-255)
+        ¢x
+        ¢x [Output]
+        ¢x      Alarm Flag (Value, 0-1)
+        ¢x
+¢w¢w¢w¢w¢r¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+
+¢w¢w¢w¢w¢s¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STUSR90 ¢x Download user name
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Slot Password (String, Length= 1 to 8)
+        ¢x      4. Keypad Password (String, Length= 0 to 5)
+        ¢x      5. User Name (String, Length= 1 to 15)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+GTPBY91 ¢x Get 1 byte from Parameter Block
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 1-255)
+        ¢x      3. Parameter Block (Value, 0-3)
+        ¢x      4. Byte Point (Value, 1-128)
+        ¢x
+        ¢x [Output]
+        ¢x      Data (Value, 0-255)
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STPBY92 ¢x Write 1 byte to Parameter Block
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Parameter Block (Value, 0-3)
+        ¢x      4. Byte Point (Value, 1-128)
+        ¢x      5. Data (Value, 0-255)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+GTPNI93 ¢x Get 1 nibble from Parameter Block
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 1-255)
+        ¢x      3. Parameter Block (Value, 0-3)
+        ¢x      4. Byte Point (Value, 1-128)
+        ¢x      5. Nibble Point (Value, 0-1)
+        ¢x
+        ¢x [Output]
+        ¢x      Data (Value, 0-127)
+        ¢x
+¢w¢w¢w¢w¢r¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+
+¢w¢w¢w¢w¢s¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STPNI94 ¢x Write 1 nibble to Parameter Block
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Parameter Block (Value, 0-3)
+        ¢x      4. Byte Point (Value, 1-128)
+        ¢x      5. Nibble Point (Value, 0-1)
+        ¢x      6. Data (Value, 0-127)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+GTPBI95 ¢x Get 1 bit from Parameter Block
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 1-255)
+        ¢x      3. Parameter Block (Value, 0-3)
+        ¢x      4. Byte Point (Value, 1-128)
+        ¢x      5. Bit Point (Value, 0-7)
+        ¢x
+        ¢x [Output]
+        ¢x      Data (Value, 0-1)
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STPBI96 ¢x Write 1 bit to Parameter Block
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Parameter Block (Value, 0-3)
+        ¢x      4. Byte Point (Value, 1-128)
+        ¢x      5. Bit Point (Value, 0-7)
+        ¢x      6. Data (Value, 0-1)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢q¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STMMS99 ¢x Set Middle Level User Card as single check
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Block (Value, 0-7)
+        ¢x      4. Password (String, Length= 1 to 13)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢r¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+
+¢w¢w¢w¢w¢s¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+STMMD9A ¢x Set Middle Level User Card as double check
+        ¢x [Input]
+        ¢x      1. Com_Port (Value, 1-4)
+        ¢x      2. Node ID  (Value, 0-255)
+        ¢x      3. Block (Value, 0-7)
+        ¢x      4. Slot Password (String, Length= 1 to 8)
+        ¢x      5. Keypad Password (String, Length= 1 to 5)
+        ¢x
+        ¢x [Output]
+        ¢x      None
+        ¢x
+¢w¢w¢w¢w¢r¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
+
+

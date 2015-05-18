@@ -67,12 +67,13 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Devart.Data.Linq, Version=4.4.463.0, Culture=neutral, PublicKeyToken=09af7300eec23701, processorArchitecture=MSIL" />
-    <Reference Include="Devart.Data.MySql, Version=8.3.201.0, Culture=neutral, PublicKeyToken=09af7300eec23701, processorArchitecture=MSIL" />
-    <Reference Include="Devart.Data.MySql.Linq, Version=4.4.463.0, Culture=neutral, PublicKeyToken=09af7300eec23701, processorArchitecture=MSIL" />
-    <Reference Include="RTA600">
-      <HintPath>.\RTA600.DLL</HintPath>
+    <Reference Include="Devart.Data, Version=5.0.917.0, Culture=neutral, PublicKeyToken=09af7300eec23701, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Devart.Data.dll</HintPath>
     </Reference>
+    <Reference Include="Devart.Data.Linq, Version=4.4.463.0, Culture=neutral, PublicKeyToken=09af7300eec23701, processorArchitecture=MSIL" />
+    <Reference Include="Devart.Data.MySql, Version=8.3.125.0, Culture=neutral, PublicKeyToken=09af7300eec23701, processorArchitecture=MSIL" />
+    <Reference Include="Devart.Data.MySql.Linq, Version=4.4.463.0, Culture=neutral, PublicKeyToken=09af7300eec23701, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -83,14 +84,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataContext1.LibraryLibrarian.cs">
+      <DependentUpon>DataContext1.lqml</DependentUpon>
+    </Compile>
+    <Compile Include="DataContext1.LibraryOffice.cs">
+      <DependentUpon>DataContext1.lqml</DependentUpon>
+    </Compile>
     <Compile Include="DataContext1.OptimusDataContext.cs">
       <DependentUpon>DataContext1.lqml</DependentUpon>
     </Compile>
-    <Compile Include="DataContext1.Optimus_Marcaciones.cs">
+    <Compile Include="DataContext1.RhIncidence.cs">
       <DependentUpon>DataContext1.lqml</DependentUpon>
     </Compile>
+    <Compile Include="DataContext1.RhMark.cs">
+      <DependentUpon>DataContext1.lqml</DependentUpon>
+    </Compile>
+    <Compile Include="DataContext1.RhSchedule.cs">
+      <DependentUpon>DataContext1.lqml</DependentUpon>
+    </Compile>
+    <Compile Include="IncidencesManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RTA600.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -155,27 +170,7 @@
       <IncludeHash>True</IncludeHash>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="Devart.Data.MySql">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>Assembly</FileType>
-    </PublishFile>
     <PublishFile Include="Devart.Data.MySql.Linq">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>Assembly</FileType>
-    </PublishFile>
-    <PublishFile Include="RTA600">
       <Visible>False</Visible>
       <Group>
       </Group>
@@ -187,6 +182,14 @@
     </PublishFile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
