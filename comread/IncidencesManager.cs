@@ -18,6 +18,7 @@ namespace comread
 
         public void generateIncidences(LibraryLibrarian librarian, DateTime day) {
 
+            //--- si librarian no es jefe, entonces generar sus incidencias (los jefes no marcan)
             if (librarian.Office.BossId != librarian.Id) { 
 
                 RhMark inicio, fin;
